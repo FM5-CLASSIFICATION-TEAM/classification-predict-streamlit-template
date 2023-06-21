@@ -21,9 +21,45 @@
 	https://docs.streamlit.io/en/latest/
 
 """
+
 # Streamlit dependencies
 import streamlit as st
 import joblib,os
+
+page_bg_img = """
+<style>
+[data-testid="stAppViewContainer"] > .main {
+    background-image: url("https://dub01pap001files.storage.live.com/y4m0zhe1eD5bjr2EuzJx_RNPZ4el2WXGnUJII92Pcvu0wLJWn3ZAfFSGn5D1QJqfSbrs_wMzv7ERTCh2XEuEN97ODfaO-tG9Rw8RAuDv86rEksU8aSRLUjuXj8LKV-Z3v-YjFxGuuJ5R0j38Ly0PVXgPLXvhpWmJ0PCeiLatRqIhl1r9XwEMvZ7OZPUaGe93SFlrQD_gwFP9Z2tL2oJjk90hQald5EhmJV7IT5ENBsDi0Y?encodeFailures=1&width=799&height=763");
+    background-size: 180%;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+[data-testid="stSidebar"] > div:first-child {
+    background-color: #1C2433;
+}
+
+[data-testid="stSidebar"] a {
+    color: white !important;
+    /* Additional sidebar styles */
+    /* ... */
+}
+
+[data-testid="stSidebar"] a:hover {
+    background-color: #2E3A4F;
+}
+
+[data-testid="stHeader"] {
+    background: rgba(0, 0, 0, 0);
+}
+
+[data-testid="stToolbar"] {
+    right: 2rem;
+}
+</style>
+"""
+st.markdown(page_bg_img, unsafe_allow_html=True)
 
 # Data dependencies
 import pandas as pd
