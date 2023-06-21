@@ -2,9 +2,9 @@ import streamlit as st
 from PIL import Image
 
 # Specify the file paths of the images
-image2_path = "C:/Users/Home-User/Pictures/business mission.jpg"
-image1_path = "C:/Users/Home-User/Pictures/Company-Vision.jpg"
-image3_path = "C:/Users/Home-User/Pictures/target.jpg"
+image2_path = r"pages\business mission.jpg"
+image1_path = r"pages\Company-Vision.jpg"
+image3_path = r"pages\target.jpg"
 
 def main():
     # Define a CSS style with a background color
