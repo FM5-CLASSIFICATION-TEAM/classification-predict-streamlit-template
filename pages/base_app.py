@@ -26,6 +26,7 @@
 import streamlit as st
 import joblib,os
 
+st.set_page_config(page_icon="📊")
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] > .main {
