@@ -71,7 +71,7 @@ def main():
         st.write("")
         st.write("")
         st.subheader("Mission")
-        st.write("We pursue to drive organizations to make informed evidence-based conclusions with confidence.")
+        st.write("We pursue to drive organizations to make informed evidence-based conclusions with confidence")
         st.write("")
         st.write("")
         st.write("")

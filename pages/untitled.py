@@ -1,7 +1,7 @@
 import streamlit as st
 
 def main():
-    st.title("We love to hear from you")
+    st.title("We love hearing from you")
 
     col1_width = 3
     col2_width = 5
