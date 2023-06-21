@@ -1,38 +1,53 @@
 import streamlit as st
-custom_style = """
-<style>
-.bubble {
-  position: relative;
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #FF9900;  /* Bubble color */
-  color: #FFFFFF;  /* Text color */
-  border-radius: 50%;
-  font-weight: bold;
-  text-align: center;
-  margin-right: 10px;
-}
 
-.bubble:after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  margin-top: -10px;
-  border-width: 10px;
-  border-style: solid;
-  border-color: transparent transparent transparent #FF9900;  /* Bubble color */
-}
-</style>
-"""
-st.markdown(custom_style, unsafe_allow_html=True)
-st.title("Contact Us")
+def main():
+    st.title("We love to hear from you")
 
-st.subheader("Email")
-st.markdown('<div class="bubble">✉️</div> CompanyName@WorldWide.com', unsafe_allow_html=True)
+    col1_width = 3
+    col2_width = 5
 
-st.subheader("Phone")
-st.markdown('<div class="bubble">📞</div> +27 10 456-7890', unsafe_allow_html=True)
+    col1, col2 = st.columns((col1_width, col2_width))
+    st.write("")
+    st.write("")
+    st.write("")
 
-st.subheader("Address")
-st.markdown('<div class="bubble">📍</div> 138 Cullinary St, Johannesburg, South Africa', unsafe_allow_html=True)
+    with col1:
+        # Content for the left column
+        st.subheader("Get in Touch")
+        name = st.text_input("Name:")
+        email = st.text_input("Email:")
+        message = st.text_area("Message:", "")
+        send_button = st.button("Send")
+        st.markdown(
+            """
+            <style>
+            .get-in-touch {
+                background-color: #f2f2f2;
+                padding: 10px;
+                border-radius: 10px;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+        
+    with col2:
+        # Content for the right column
+        st.markdown('<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">', unsafe_allow_html=True)
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        st.subheader("Contact Us")
+        st.markdown(
+            """
+            <div style="background-color: #f2f2f2; padding: 10px; border-radius: 5px;">
+                <span class="material-icons-outlined"style="font-size: 16px">attach_email</span> Email: Reception@GlobalSearchAnalytics</p>
+                <span class="material-icons-outlined"style="font-size: 16px;">settings_phone</span> TEL: +27 11 456 7095</p>
+                <span class="material-icons-outlined"style="font-size: 16px;">location_on</span>Location: 138 Culinary St, Johannesburg, South Africa</p>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+main()
