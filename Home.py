@@ -89,9 +89,9 @@ lottie_coding = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_KC
 st.image(logo_image, use_column_width=True)
 
 # Welcome message
-st.title("Welcome to the Climate Change tweet classification app")
+st.title("Welcome To The Classification App")
 st.markdown("""
-Are you curious about how people feel about climate change on Twitter? Our sentiment analysis app can help you gain insights by analyzing the sentiment expressed in tweets.
+Are you curious of how people feel about products and services you are offering? Our sentiment analysis app can help you gain insights by analyzing the sentiment expressed in tweets.
 """)
 
 # How it works section
@@ -103,9 +103,9 @@ with st.container():
         st.write("##")
         st.write(
             """
-            **Write a climate change opinion**: Share your thoughts on climate change by writing a statement or expressing your views.
+            **Write a product review**: Share your thoughts by writing a statement or expressing your views.
 
-**Enter your opinion**: Simply enter your opinion in the provided text box. It can be about any aspect of climate change that you feel strongly about.
+**Enter your opinion**: Simply enter your opinion in the provided text box. It can be about any aspect of the product that you feel strongly about.
 
 **Predict sentiment**: Our app utilizes advanced machine learning algorithms to analyze your opinion and predict its sentiment. It classifies your opinion as positive, negative, or neutral based on the sentiment expressed.
 
