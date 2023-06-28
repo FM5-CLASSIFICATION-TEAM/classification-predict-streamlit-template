@@ -28,7 +28,7 @@ img = get_img_as_base64(image_file)
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] > .main {
-    background-image: url("https://dub01pap001files.storage.live.com/y4m0zhe1eD5bjr2EuzJx_RNPZ4el2WXGnUJII92Pcvu0wLJWn3ZAfFSGn5D1QJqfSbrs_wMzv7ERTCh2XEuEN97ODfaO-tG9Rw8RAuDv86rEksU8aSRLUjuXj8LKV-Z3v-YjFxGuuJ5R0j38Ly0PVXgPLXvhpWmJ0PCeiLatRqIhl1r9XwEMvZ7OZPUaGe93SFlrQD_gwFP9Z2tL2oJjk90hQald5EhmJV7IT5ENBsDi0Y?encodeFailures=1&width=799&height=763");
+    background-image: url("https://dub01pap001files.storage.live.com/y4mfRIuvGIqA97lfg9lOiNN-ap3Jl5vOscqjyfQh6r0mnARMgQZNOaYxzHZEfEK0bFeKJDhfQ5jCc7GfAJOu4j7MFnpfLxNzarkln42DTLJGz7s6Mtd-Fje0rhZ0RLL2jUMT01dcSKUDoR8MXAvw5-W-0DCfuaQLH5U1e6v5fOfgPCsCAK9U-jZRipqVFEyP6j_HZSFvIyc654QRzlmLo7q3tILya3Y50k84VVv54cMFts?encodeFailures=1&width=799&height=763");
     background-size: 180%;
     background-position: top left;
     background-repeat: no-repeat;
@@ -36,7 +36,7 @@ page_bg_img = """
 }
 
 [data-testid="stSidebar"] > div:first-child {
-    background-color: #1C2433;
+    background-color: #d5d7db;
 }
 
 [data-testid="stSidebar"] a {
