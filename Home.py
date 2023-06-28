@@ -1,144 +1,198 @@
+"""
+
+    Simple Streamlit webserver application for serving developed classification
+	models.
+
+    Author: Explore Data Science Academy.
+
+    Note:
+    ---------------------------------------------------------------------
+    Please follow the instructions provided within the README.md file
+    located within this directory for guidance on how to use this script
+    correctly.
+    ---------------------------------------------------------------------
+
+    Description: This file is used to launch a minimal streamlit web
+	application. You are expected to extend the functionality of this script
+	as part of your predict project.
+
+	For further help with the Streamlit framework, see:
+
+	https://docs.streamlit.io/en/latest/
+
+"""
+# Streamlit dependencies
+from ctypes import alignment
+
+from scipy.misc import central_diff_weights
 import streamlit as st
-import requests
-import base64
+import numpy as np
+import altair as alt
+import time
+import hydralit_components as hc
+import matplotlib.pyplot as plt
+import joblib,os
 
-st.set_page_config(page_icon="📊")
-def load_lottieurl(url):
-    r = requests.get(url)
-    if r.status_code != 200:
-        return None
-    return r.json()
+# Data dependencies
+import pandas as pd
+from PIL import Image
+# Vectorizer
+news_vectorizer = open("resources/Vectorizer.pkl","rb")
+tweet_cv = joblib.load(news_vectorizer) # loading your vectorizer from the pkl file
+
+# Load your raw data
+raw = pd.read_csv("resources/train.csv")
+
+# The main function where we will build the actual app
+
+def main():
+
+	prediction =[]
+	models= ['Logistic Regression', 'MultinomialNB', 'Support Vector',
+			 'ComplementNB']
+	results= {'-1': 'Anti' , '0': 'Neutral', '1': 'Pro' , '2' : 'News'}	 
+	menu_data = [
+        {'id':'predict','icon':"🐙",'label':"Predict"},
+		{'id':'rawData', 'icon': "far fa-clone", 'label':"Raw Data"},
+        {'id':'visualize', 'icon': "far fa-chart-bar", 'label':"Visualize"},#no tooltip message
+		{'id': 'info' , 'icon': "far fa-copy", 'label':"Info"},
+		{'id': 'aboutUs',  'icon': "far fa-address-book ", 'label':"About Us"},
+       
+]
+	over_theme = {'txc_inactive': '#FFFFFF'}
+	menu_id = hc.nav_bar(menu_definition=menu_data,home_name='Home',override_theme=over_theme)
 
 
-def get_img_as_base64(file):
-    with open(file, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-def get_img_as_base64(file):
-    with open(file, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-image_file = "pages\image.jpg"
-img = get_img_as_base64(image_file)
-
-# img = get_img_as_base64("image.jpg")
-
-page_bg_img = """
+	if menu_id == 'predict':
+		
+			# Creating a text box for user input
+		st.image("resources/imgs/tweet1.jpg", width =400)
+		m = st.markdown("""
 <style>
-[data-testid="stAppViewContainer"] > .main {
-    background-image: url("https://dub01pap001files.storage.live.com/y4mfRIuvGIqA97lfg9lOiNN-ap3Jl5vOscqjyfQh6r0mnARMgQZNOaYxzHZEfEK0bFeKJDhfQ5jCc7GfAJOu4j7MFnpfLxNzarkln42DTLJGz7s6Mtd-Fje0rhZ0RLL2jUMT01dcSKUDoR8MXAvw5-W-0DCfuaQLH5U1e6v5fOfgPCsCAK9U-jZRipqVFEyP6j_HZSFvIyc654QRzlmLo7q3tILya3Y50k84VVv54cMFts?encodeFailures=1&width=799&height=763");
-    background-size: 180%;
-    background-position: top left;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+div.stButton > button:first-child {
+    background-color: rgb(255, 49, 49);
 }
+</style>""", unsafe_allow_html=True)
 
-[data-testid="stSidebar"] > div:first-child {
-    background-color: #d5d7db;
-}
-
-[data-testid="stSidebar"] a {
-    color: white !important;
-    /* Additional sidebar styles */
-    /* ... */
-}
-
-[data-testid="stSidebar"] a:hover {
-    background-color: #2E3A4F;
-}
-
-[data-testid="stHeader"] {
-    background: rgba(0, 0, 0, 0);
-}
-
-[data-testid="stToolbar"] {
-    right: 2rem;
-}
-</style>
-"""
-st.markdown(page_bg_img, unsafe_allow_html=True)
-
-# Define file paths
-image_file = r"pages\image.jpg"
-logo_image = r"pages\WhatsApp Image 2023-06-26 at 07.35.07.jpg"
-chatimage = r"pages\chat.png"
-
-# Load image as base64
-image_base64 = get_img_as_base64(image_file)
-
-# Set page background image
-page_bg_img = f"""
+		s = st.markdown("""
 <style>
-body {{
-    background-image: url("https://images.unsplash.com/photo-1521080755838-d2311117f767?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1262&q=80");
-    background-size: 180%;
-    background-position: top left;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    font-family: Helvetica, Arial, sans-serif;  /* Set font to Helvetica */
-}}
-</style>
-"""
-st.markdown(page_bg_img, unsafe_allow_html=True)
+div.stText_Area > button:first-child {
+    background-color: rgb(255, 49, 49);
+}
+</style>""", unsafe_allow_html=True)
+				
+				
+		tweet_text = st.text_area("Enter text you would like to classify",key = 1)
+		
+		model_choice= st.selectbox("Choose a model", models)
 
-# Load Lottie animation
-lottie_coding = load_lottieurl("https://assets7.lottiefiles.com/packages/lf20_KCYk5H7cJP.json")
+		if model_choice == 'Logistic Regression':
+			if st.button("Classify"):
+				with hc.HyLoader(f'Classifying  with {model_choice}..',hc.Loaders.standard_loaders,index=[2,2]):
+					time.sleep(3)
+				# Transforming user input with vectorizer
+					vect_text = tweet_cv.transform([tweet_text]).toarray()
+				# Load your .pkl file with the model of your choice + make predictions
+				# Try loading in multiple models to give the user a choice
+					predictor = joblib.load(open(os.path.join("resources/Logistic_regression.pkl"),"rb"))
+			
+					prediction = predictor.predict(vect_text)
 
-# Landing Page
-st.image(logo_image, use_column_width=True)
+				# When model has successfully run, will print prediction
+				# You can use a dictionary or similar structure to make this output
+				# more human interpretable.
+		
+					st.metric("Text Categorized as: " , prediction)
+					
+		if model_choice == 'MultinomialNB':
+			# Creating a text box for user input
+			if st.button("Classify"):
+				with hc.HyLoader(f'Classifying  with {model_choice}..', hc.Loaders.standard_loaders,index=[2,2]):
+					time.sleep(3)
+				# Transforming user input with vectorizer
+				vect_text = tweet_cv.transform([tweet_text]).toarray()
+		
+				predictor = joblib.load(open(os.path.join("resources/MultinomialNB.pkl"),"rb"))
+				prediction = predictor.predict(vect_text)
+				st.metric("Text Categorized as: " , prediction)
 
-# Welcome message
-st.title("Welcome To The Classification App")
-st.markdown("""
-Are you curious of how people feel about products and services you are offering? Our sentiment analysis app can help you gain insights by analyzing the sentiment expressed in tweets.
-""")
+		if model_choice == 'Support Vector':
+	
+			if st.button("Classify"):
+				with hc.HyLoader('Classifying with Support Vector',hc.Loaders.standard_loaders,index=[2,2]):
+					time.sleep(3)
+				# Transforming user input with vectorizer
+				vect_text = tweet_cv.transform([tweet_text]).toarray()
+				predictor = joblib.load(open(os.path.join("resources/Support_Vector.pkl"),"rb"))
+				prediction = predictor.predict(vect_text)
+				st.metric("Text Categorized as: " , prediction)
+		
+		if model_choice == 'ComplementNB':
+	
+			if st.button("Classify"):
+				with hc.HyLoader('Classifying with ComplementNB..',hc.Loaders.standard_loaders,index=[2,2]):
+					time.sleep(3)
+				# Transforming user input with vectorizer
+				vect_text = tweet_cv.transform([tweet_text]).toarray()
+				predictor = joblib.load(open(os.path.join("resources/Complement Naive Bayes.pkl"),"rb"))
+				prediction = predictor.predict(vect_text)
+				st.metric("Text Categorized as: " , prediction)
 
-# How it works section
-with st.container():
-    st.write("---")
-    left_column, right_column = st.columns(2)
-    with left_column:
-        st.header("How it works")
-        st.write("##")
-        st.write(
-            """
-            **Write a product review**: Share your thoughts by writing a statement or expressing your views.
 
-**Enter your opinion**: Simply enter your opinion in the provided text box. It can be about any aspect of the product that you feel strongly about.
+	if menu_id == 'rawData':
+		st.markdown("<h2 style='text-align: center;'>Tweets Dataframe</h2>",
+			unsafe_allow_html=True)
+		st.write(raw[['sentiment', 'message']])
+	if menu_id == 'visualize':
+		labels = 'Anti', 'Neutral', 'Pro', 'News'
+		sizes = [12, 25, 85, 35]
+		explode = (0, 0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 
-**Predict sentiment**: Our app utilizes advanced machine learning algorithms to analyze your opinion and predict its sentiment. It classifies your opinion as positive, negative, or neutral based on the sentiment expressed.
+		fig1, ax1 = plt.subplots()
+		ax1.pie(sizes, explode=explode, labels=labels, autopct='%0.1f%%',
+				shadow=True, startangle=90)
+		ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
-**Discover the sentiment**: The app presents the predicted sentiment of your opinion in an easy-to-understand format. You'll see visual indicators or labels representing the sentiment category your opinion falls into
-            """
-        )
-    with right_column:
-        st.write("##")
-        st.write("##")
-        st.write("##")
-        st.image(chatimage,  use_column_width=True)
+		st.pyplot(fig1)
+		with st.expander("See explanation"):
+			st.write("""
+				This pie chart shows the distribution of all the sentiments towards 
+				climate change being man made or not.
+			""")
 
-# Why Use Sentiment Analysis section
-st.write("---")
-st.header("Why Use Sentiment Analysis?")
-st.markdown("""
-    - **Business Insights**: Understand customer sentiment towards your brand, products, or services to drive business decisions and improve customer satisfaction.
-    - **Brand Monitoring**: Organizations continually monitor brand mentions and chatter on social media, forums, blogs, news articles, and other digital platforms. Sentiment analysis technology enable the public relations staff to be aware of ongoing stories that are relevant to their work. To address complaints or capitalize on good trends, the team can assess the underlying mood.
-    - **Market Research**: Businesses can improve their product offers by studying what works and what doesn't with a sentiment analysis system. Marketers can acquire deeper insights into certain product characteristics by analyzing comments on online review sites, survey replies, and social media posts. They communicate their results to product owners, who then innovate accordingly.
-    - **Track Campaign Perfomance**: Marketers employ sentiment analysis technologies to ensure that their advertising campaign evokes the desired response. They monitor social media conversations to ensure that the overall tone is positive. If the overall attitude falls short of expectations, marketers will make changes to the campaign based on real-time data analytics. 
-    - **Opinion Mining**: Identify emerging trends, public opinion shifts, or sentiment patterns in large volumes of text data.
-""")
+	if menu_id == 'aboutUs':
+		st.image("resources/imgs/team.jpg")
+		st.markdown("<h2 style='text-align: center;'>Who are we?</h2>",
+			unsafe_allow_html=True)
+		st.write("We are a group of Data Scientists "
+		+"who are committed to bringing change to the world through Data Analytics. "
+		+"The team is comprised of")
+		st.write("- Nare Moloto")
+		st.write("- Dumisani Ncubeni")
+		st.write("- Koketso Makofane")
+		st.write("- Mpho Manthada")
+		st.write("- Akule Cekwana")
+		st.write("- Koketso Maraba")
+		st.write("- Tshegofatso Seabi")
+		st.write("Website: [Global Search Analytics](https://github.com/FM5-CLASSIFICATION-TEAM)")
+		st.markdown("<h2 style='text-align: center;'>Contact Us</h2>",
+		 unsafe_allow_html=True)
+		st.write("Email : data.analytics@global.co.za")
+		st.write("Telephone : 011 345 7787")
+	if menu_id=='info':
+		st.markdown("<h2 style='text-align: center;'>Sentiment catagories explained.</h2>",
+			unsafe_allow_html=True)
+		st.write('- `1 Pro:` the tweet supports the belief of man-made climate change')
+		st.write('- `2 News:` the tweet links to factual news about climate change')
+		st.write('- `0 Neutral:` the tweet neither supports nor refutes the belief of man-made climate change')
+		st.write('- `-1 Anti:` the tweet does not believe in man-made climate change')
+	if menu_id == 'Home':
+		st.markdown("<h2 style='text-align: center;'>Sentiment Classifier</h2>",
+		 unsafe_allow_html=True)
+		st.image("resources/imgs/Advanced Classification 2023 ExploreAI.jpg" ,  width = 650 )		
 
-# Start Analyzing Sentiments section
-st.write("---")
-st.header("Start Analyzing Sentiments Today!")
-st.markdown("""
-    Click the button below to launch the Sentiment Analysis Tweet Classifier and start gaining valuable insights from Twitter conversations.
-""")
+		
 
-# Get Started Button
-if st.button("Get Started"):
-    # Add your code here to redirect to the actual sentiment analysis app or perform any other action
-    st.experimental_set_query_params(page="Base_App.py")
-    st.write("Redirecting to the Sentiment Analysis App...")
+# Required to let Streamlit instantiate our web app.  
+if __name__ == '__main__':
+	main()
